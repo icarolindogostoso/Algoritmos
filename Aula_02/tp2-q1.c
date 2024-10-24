@@ -32,7 +32,6 @@ int main(){
             else {
                 saldo = saldo - dinheiro;
                 printf("Saque realizado com sucesso!!\n");
-                printf("Voce tem R$ %.2lf na conta\n", saldo);
                 printf("\n");
             }
         }
@@ -47,14 +46,13 @@ int main(){
             } else{
                 saldo = saldo + dinheiro;
                 printf("Deposito realizado com sucesso!\n");
-                printf("Voce tem R$ %.2lf na conta\n", saldo);
                 printf("\n");
             }
         }
 
         else if (funcionamento == 3){
             printf("Seu saldo é R$ %.2lf\n", saldo);
-            printf("\n")
+            printf("\n");
         }
 
         else{

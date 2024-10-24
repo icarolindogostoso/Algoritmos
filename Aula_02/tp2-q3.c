@@ -36,9 +36,9 @@ int main(){
     }
 
     printf("Quantidade de votos para cada canditado: \n");
-    printf("Isabella = %d votos", votosisa);
-    printf("Icaro = %d votos", votosicaro);
-    printf("Flavio = %d votos", votosflavio);
-    
+    printf("Isabella = %d votos\n", votosisa);
+    printf("Icaro = %d votos\n", votosicaro);
+    printf("Flavio = %d votos\n", votosflavio);
+
     return 0;
 }
