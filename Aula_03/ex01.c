@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 void duplicaValores(int a[10]) {
 	int i;
 	for (i = 0; i < 10; i++) {
@@ -15,5 +17,7 @@ int main(int argc, char **argv) {
 	for (i = 0; i < 10; i++) {
 		printf("%d ", a1[i]);
 	}
+	printf("\n");
+
 	return 0;
 }
