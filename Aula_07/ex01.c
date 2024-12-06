@@ -3,15 +3,72 @@
 #include <string.h>
 
 struct Contato {
+    int id;
     char nome[50];
     char telefone[15];
 };
 
-struct Contato* criarContato(char nome[], char telefone[]){
-    struct Contato* contato = (struct Contato*) malloc(sizeof(struct Contato));
+void inserir(struct Contato agenda[], int totalContatos){
+    int id = 0;
+    for (int i = 0; i < totalContatos; i++){
+        if (agenda[i].id > id){
+            id = agenda[i].id;
+        }
+    }
+    agenda[totalContatos].id = id + 1;
 
-    strcpy(contato->nome, nome);
-    strcpy(contato->telefone, telefone);
+    printf("Digite o nome do contato: ");
+    scanf("%s", agenda[totalContatos].nome);
+
+    printf("Digite o telefone do contato: ");
+    scanf("%s", agenda[totalContatos].telefone);
+}
+
+void listar(struct Contato agenda[], int totalContatos){
+    printf("estou aqui\n");
+    for (int j = 0; j < totalContatos; j++){
+        printf("%d - ", agenda[j].id);
+        printf("%s - ", agenda[j].nome);
+        printf("%s\n", agenda[j].telefone);
+    }
+}
+
+void atualizar(struct Contato agenda[], int totalContatos){
+    listar(agenda, totalContatos);
+    int contato = 0;
+    printf("Qual contato vocé deseja atualizar as informações?");
+    scanf("%d", &contato);
+
+    int posicao;
+    for (int i = 0; i < totalContatos - 1; i++){
+        if (agenda[i].id == contato){
+            posicao = i;
+        }
+    }
+
+    printf("Digite o novo nome do contato: ");
+    scanf("%s", agenda[posicao].nome);
+
+    printf("Digite o novo telefone do contato: ");
+    scanf("%s", agenda[posicao].telefone);
+}
+
+void excluir(struct Contato agenda[], int totalContatos){
+    listar(agenda, totalContatos);
+    int contato = 0;
+    printf("Qual contato vocé deseja excluir?");
+    scanf("%d", &contato);
+
+    int posicao;
+    for (int i = 0; i < totalContatos - 1; i++){
+        if (agenda[i].id == contato){
+            posicao = i;
+        }
+    }
+
+    for (int i = posicao; i < totalContatos - 1; i++){
+        agenda[i] = agenda[i + 1];
+    }
 }
 
 int main() {
@@ -24,35 +81,20 @@ int main() {
         printf("Informe sua opção: ");
         scanf("%d", &op);
 
-        switch (op)
-        {
-        case 1:
-            printf("Digite o nome do contato: ");
-            scanf("%s", agenda[totalContatos].nome);
-
-            printf("Digite o telefone do contato: ");
-            scanf("%s", agenda[totalContatos].telefone);
-
-            totalContatos++;
-            break;
-
-        case 2:
-            for (int j = 0; j < totalContatos; j++){
-                printf("%s ", agenda[j].nome);
-                printf("%s\n", agenda[j].telefone);
-            }
-            break;
-        
-        case 3:
-            break;
-
-        case 4:
-            break;
-
-        default:
-            printf("Opção invalida");
-            break;
+        if (op == 1){
+            inserir(agenda, totalContatos);
+            totalContatos ++;
+        } else if (op == 2){
+            listar(agenda, totalContatos);
+        } else if (op == 3){
+            atualizar(agenda, totalContatos);
+        } else if (op == 4){
+            excluir(agenda, totalContatos);
+            totalContatos --;
+        } else {
+            printf("Opção invalida!\n");
         }
+
     }
 
     return 0;
