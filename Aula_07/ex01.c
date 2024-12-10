@@ -25,7 +25,6 @@ void inserir(struct Contato agenda[], int totalContatos){
 }
 
 void listar(struct Contato agenda[], int totalContatos){
-    printf("estou aqui\n");
     for (int j = 0; j < totalContatos; j++){
         printf("%d - ", agenda[j].id);
         printf("%s - ", agenda[j].nome);
