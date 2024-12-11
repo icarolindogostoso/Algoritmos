@@ -2,6 +2,7 @@
 #include <string.h>
 
 struct Pessoa{
+    int id;
     char nome[50];
     int idade;
     char atendimento[50];
@@ -13,23 +14,54 @@ struct Fila{
     struct Pessoa* proxima;
 };
 
-void inserirpreferencial(struct Fila* fila){
+void inserirpreferencial(struct Fila* fila, int* qtdpreferencial){
+    int id = 0;
+    for (int i = 0; i < *qtdpreferencial; i++){
+        if (fila->pessoas[i].id > id){
+            id = fila->pessoas[i].id;
+        }
+    }
+
+    char nome[50];
     printf("Informe o nome da pessoa: ");
-    scanf("%s", fila->proxima->nome);
+    scanf("%s", nome);
 
+    int idade;
     printf("Informe a idade da pessoa: ");
-    scanf("%d", &fila->proxima->idade);
+    scanf("%d", &idade);
 
+    char atendimento[50];
     printf("Informe o atendimento da pessoa (cirgurgia, ortopedia): ");
-    scanf("%s", fila->proxima->atendimento);
+    scanf("%s", atendimento);
 
+    char preferencial[50];
     printf("Informe o preferencial da pessoa (idoso, gestante, lactante, PCD): ");
-    scanf("%s", fila->proxima->preferencial);
+    scanf("%s", preferencial);
 
-    fila->proxima++;
+    if (strcmp(preferencial, "idoso") == 0 || strcmp(preferencial, "gestante") == 0 || strcmp(preferencial, "lactante") == 0 || strcmp(preferencial, "PCD") == 0){
+        fila->proxima->id = id + 1;
+        strcpy(fila->proxima->nome, nome);
+        fila->proxima->idade = idade;
+        strcpy(fila->proxima->atendimento, atendimento);
+        strcpy(fila->proxima->preferencial, preferencial);
+
+        fila->proxima++;
+        *qtdpreferencial = *qtdpreferencial + 1;
+    } else {
+        printf("Preferencialidade invalida!\n");
+    }
 }
 
-void inserirgeral(struct Fila* fila){
+void inserirgeral(struct Fila* fila, int* qtdgeral){
+    int id = 0;
+    for (int i = 0; i < *qtdgeral; i++){
+        if (fila->pessoas[i].id > id){
+            id = fila->pessoas[i].id;
+        }
+    }
+
+    fila->proxima->id = id + 1;
+
     printf("Informe o nome da pessoa: ");
     scanf("%s", fila->proxima->nome);
 
@@ -42,75 +74,92 @@ void inserirgeral(struct Fila* fila){
     strcpy(fila->proxima->preferencial, "Geral");
 
     fila->proxima++;
+    *qtdgeral = *qtdgeral + 1;
 }
 
-void listarpreferencial(struct Fila* fila){
-    int i = 0;
-    for (i; i < fila->proxima - fila->pessoas; i++){
+void listar(struct Fila* fila, int* qtd){
+    for (int i = 0; i < *qtd; i++){
+        printf("Id: %d\n", fila->pessoas[i].id);
         printf("Nome: %s\n", fila->pessoas[i].nome);
         printf("Idade: %d\n", fila->pessoas[i].idade);
         printf("Atendimento: %s\n", fila->pessoas[i].atendimento);
         printf("Preferencial: %s\n", fila->pessoas[i].preferencial);
         printf("\n");
-        i++;
     }
 }
 
-void listargeral(struct Fila* fila){
+void remover(struct Fila* fila, int id, int* qtd){
     int i = 0;
-    for (i; i < fila->proxima - fila->pessoas; i++){
-        printf("Nome: %s\n", fila->pessoas[i].nome);
-        printf("Idade: %d\n", fila->pessoas[i].idade);
-        printf("Atendimento: %s\n", fila->pessoas[i].atendimento);
-        printf("Preferencial: %s\n", fila->pessoas[i].preferencial);
-        printf("\n");
+    while (fila->pessoas[i].id != id){
         i++;
     }
-}
-
-void removerpreferencial(struct Fila* fila, char* nome){
-    int i = 0;
-    while (strcmp(fila->pessoas[i].nome, nome) != 0){
-        i++;
-    }
-    for (int j = i; j < 50; j++){
+    for (int j = i; j < *qtd; j++){
         fila->pessoas[j] = fila->pessoas[j+1];
     }
     fila->proxima--;
+    *qtd = *qtd - 1;
 }
 
-void removergeral(struct Fila* fila, char* nome){
-    int i = 0;
-    while (strcmp(fila->pessoas[i].nome, nome) != 0){
-        i++;
-    }
-    for (int j = i; j < 50; j++){
-        fila->pessoas[j] = fila->pessoas[j+1];
-    }
-    fila->proxima--;
+void proximoASerAtendido(struct Fila* fila, int* qtd, int posicao){
+    printf("Proximo a ser atendido: \n");
+    printf("Id: %d\n", fila->pessoas[posicao].id);
+    printf("Nome: %s\n", fila->pessoas[posicao].nome);
+    printf("Idade: %d\n", fila->pessoas[posicao].idade);
+    printf("Atendimento: %s\n", fila->pessoas[posicao].atendimento);
+    printf("Preferencial: %s\n", fila->pessoas[posicao].preferencial);
+    printf("\n");
+    remover(fila, fila->pessoas[posicao].id, qtd);
 }
 
-void atender(struct Fila* preferencial, struct Fila* geral, int* prefencialatendido){
-    if (preferencial->proxima == preferencial->pessoas || *prefencialatendido == 1){
-        printf("Proximo a ser atendido: \n");
-        printf("Nome: %s\n", geral->pessoas[0].nome);
-        printf("Idade: %d\n", geral->pessoas[0].idade);
-        printf("Atendimento: %s\n", geral->pessoas[0].atendimento);
-        printf("Preferencial: %s\n", geral->pessoas[0].preferencial);
-        printf("\n");
-        removergeral(geral, geral->pessoas[0].nome);
+void atender(struct Fila* preferencial, struct Fila* geral, int* prefencialatendido, int* qtdpreferencial, int* qtdgeral){
+    if (preferencial->proxima == preferencial->pessoas && geral->proxima == geral->pessoas){
+        printf("Nenhuma pessoa na fila!\n");
+    } else if (preferencial->proxima == preferencial->pessoas || *prefencialatendido == 1){
+        proximoASerAtendido(geral, qtdgeral, 0);
         *prefencialatendido = 0;
     } else {
+        int idoso = 0;
+        int gestanteOuLactante = 0;
+        for (int i = 0; i < *qtdpreferencial; i++){
+            if (strcmp(preferencial->pessoas[i].preferencial, "idoso") == 0){
+                proximoASerAtendido(preferencial, qtdpreferencial, i);
+                idoso = 1;
+                break;
+            }
+        }
+
+        if (idoso == 0){
+            for (int i = 0; i < *qtdpreferencial; i++){
+                if (strcmp(preferencial->pessoas[i].preferencial, "gestante") == 0 || strcmp(preferencial->pessoas[i].preferencial, "lactante") == 0){
+                    proximoASerAtendido(preferencial, qtdpreferencial, i);
+                    gestanteOuLactante = 1;
+                    break;
+                }
+            }
+            if (gestanteOuLactante == 0){
+                for (int i = 0; i < *qtdpreferencial; i++){
+                    if (strcmp(preferencial->pessoas[i].preferencial, "PCD") == 0){
+                        proximoASerAtendido(preferencial, qtdpreferencial, i);
+                        break;
+                    }
+                }
+            }
+        }
         *prefencialatendido = 1;
     }
 }
 
+
 int main(){
     struct Fila prefencial;
+    int qtdpreferencial = 0;
     prefencial.proxima = prefencial.pessoas;
 
     struct Fila geral;
+    int qtdgeral = 0;
     geral.proxima = geral.pessoas;
+
+    int preferencialatendido = 0;
 
     int op = 0;
     while (op != 7){
@@ -119,30 +168,29 @@ int main(){
         scanf("%d", &op);
 
         if (op == 1){
-            inserirpreferencial(&prefencial);
+            inserirpreferencial(&prefencial, &qtdpreferencial);
         } else if (op == 2){
-            inserirgeral(&geral);
+            inserirgeral(&geral, &qtdgeral);
         } else if (op == 3){
-            listarpreferencial(&prefencial);
-            printf("Informe o nome da pessoa a ser removida: ");
-            char nome[50];
-            scanf("%s", nome);
-            removerpreferencial(&prefencial, nome);
+            listar(&prefencial, &qtdpreferencial);
+            printf("Informe o id da pessoa a ser removida: ");
+            int id;
+            scanf("%d", &id);
+            remover(&prefencial, id, &qtdpreferencial);
         } else if (op == 4){
-            listargeral(&geral);
-            printf("Informe o nome da pessoa a ser removida: ");
-            char nome[50];
-            scanf("%s", nome);
-            removergeral(&geral, nome);
+            listar(&geral, &qtdgeral);
+            printf("Informe o id da pessoa a ser removida: ");
+            int id;
+            scanf("%d", &id);
+            remover(&geral, id, &qtdgeral);
         } else if (op == 5){
-            int preferencialatendido = 0;
-            atender(&prefencial, &geral, &preferencialatendido);
+            atender(&prefencial, &geral, &preferencialatendido, &qtdpreferencial, &qtdgeral);
         } else if (op == 6){
             printf("Pessoas na fila preferencial: \n");
-            listarpreferencial(&prefencial);
+            listar(&prefencial, &qtdpreferencial);
 
             printf("Pessoas na fila geral: \n");
-            listargeral(&geral);
+            listar(&geral, &qtdgeral);
         }
     }
     return 0;
