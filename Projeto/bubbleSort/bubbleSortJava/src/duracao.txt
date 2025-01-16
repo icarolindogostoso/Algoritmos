@@ -1,0 +1,4 @@
+Tempo de execucao: 0,000165 segundos para 100 entradas
+Tempo de execucao: 0,004208 segundos para 1000 entradas
+Tempo de execucao: 0,031628 segundos para 10000 entradas
+Tempo de execucao: 8,491140 segundos para 100000 entradas

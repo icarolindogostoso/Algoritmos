@@ -26,11 +26,11 @@ public class bubbleSort {
     public static void main(String[] args) {
         int[] entradas = {100, 1000, 10000, 100000};
         
-        String nomeArquivoDuracao = "duracao.txt";
+        String nomeArquivoDuracao = "Algoritmos/Projeto/bubbleSort/bubbleSortJava/src/duracao.txt";
 
         try (BufferedWriter duracaoWriter = new BufferedWriter(new FileWriter(nomeArquivoDuracao, true))){
             for (int n : entradas) {
-                String nomeArquivoEntrada = n + "-entradas.txt";
+                String nomeArquivoEntrada = "Algoritmos/Projeto/bubbleSort/bubbleSortJava/src/" + n + "-entradas.txt";
 
                 File file = new File(nomeArquivoEntrada);
                 if (!file.exists()) {
@@ -53,10 +53,10 @@ public class bubbleSort {
 
                 double tempo = (end - start) / 1e9;
 
-                duracaoWriter.write(String.format("Tempo de execução: %.6f segundos para %d entradas%n", tempo, n));
-                System.out.printf("Tempo de execução: %.6f segundos para %d entradas%n", n, tempo);
+                duracaoWriter.write(String.format("Tempo de execucao: %.6f segundos para %d entradas\n", tempo, n));
+                System.out.printf("Tempo de execucao: %.6f segundos para %d entradas\n", tempo, n);
                 
-                String nomeArquivoSaida = "ordenado_" + n + ".txt";
+                String nomeArquivoSaida = "Algoritmos/Projeto/bubbleSort/bubbleSortJava/src/ordenado_" + n + ".txt";
 
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter(nomeArquivoSaida))){
                     for (int i = 0; i < arr.length; i++) {
