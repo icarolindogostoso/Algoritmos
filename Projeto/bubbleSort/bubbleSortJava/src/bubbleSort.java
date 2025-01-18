@@ -24,52 +24,44 @@ public class bubbleSort {
     }
     
     public static void main(String[] args) {
-        int[] entradas = {100, 1000, 10000, 100000};
+        int[] entradas = {100, 1000, 10000, 100000, 1000000};
+
+        for (int j = 0; j < 4; j++) {
         
-        String nomeArquivoDuracao = "Algoritmos/Projeto/bubbleSort/bubbleSortJava/src/duracao.txt";
+            String nomeArquivoDuracao = "Algoritmos/Projeto/bubbleSort/bubbleSortJava/src/" + (j + 1) + "-duracao.txt";
 
-        try (BufferedWriter duracaoWriter = new BufferedWriter(new FileWriter(nomeArquivoDuracao, true))){
-            for (int n : entradas) {
-                String nomeArquivoEntrada = "Algoritmos/Projeto/bubbleSort/bubbleSortJava/src/" + n + "-entradas.txt";
+            try (BufferedWriter duracaoWriter = new BufferedWriter(new FileWriter(nomeArquivoDuracao, true))){
+                for (int n : entradas) {
+                    String nomeArquivoEntrada = "Algoritmos/Projeto/bubbleSort/bubbleSortJava/src/" + n + "-entradas.txt";
 
-                File file = new File(nomeArquivoEntrada);
-                if (!file.exists()) {
-                    System.out.println("Erro ao abrir o arquivo " + nomeArquivoEntrada);
-                    return;
-                }
-
-                List<Integer> numeros = new ArrayList<>();
-                try (Scanner scanner = new Scanner(file)) {
-                    while (scanner.hasNextInt()) {
-                        numeros.add(scanner.nextInt());
+                    File file = new File(nomeArquivoEntrada);
+                    if (!file.exists()) {
+                        System.out.println("Erro ao abrir o arquivo " + nomeArquivoEntrada);
+                        return;
                     }
-                }
 
-                int[] arr = numeros.stream().mapToInt(i -> i).toArray();
-
-                long start = System.nanoTime();
-                BubbleSort(arr);
-                long end = System.nanoTime();
-
-                double tempo = (end - start) / 1e9;
-
-                duracaoWriter.write(String.format("Tempo de execucao: %.6f segundos para %d entradas\n", tempo, n));
-                System.out.printf("Tempo de execucao: %.6f segundos para %d entradas\n", tempo, n);
-                
-                String nomeArquivoSaida = "Algoritmos/Projeto/bubbleSort/bubbleSortJava/src/ordenado_" + n + ".txt";
-
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(nomeArquivoSaida))){
-                    for (int i = 0; i < arr.length; i++) {
-                        writer.write(arr[i] + " ");
+                    List<Integer> numeros = new ArrayList<>();
+                    try (Scanner scanner = new Scanner(file)) {
+                        while (scanner.hasNextInt()) {
+                            numeros.add(scanner.nextInt());
+                        }
                     }
-                    writer.newLine();
+
+                    int[] arr = numeros.stream().mapToInt(i -> i).toArray();
+
+                    long start = System.nanoTime();
+                    BubbleSort(arr);
+                    long end = System.nanoTime();
+
+                    double tempo = (end - start) / 1e9;
+
+                    duracaoWriter.write(String.format("Tempo de execucao: %.6f segundos para %d entradas\n", tempo, n));
+                    System.out.printf("Tempo de execucao: %.6f segundos para %d entradas\n", tempo, n);
+
                 }
-
-                System.out.printf("Os valores ordenados para %d entradas foram salvos em '%s'.%n", n, nomeArquivoSaida);
-
+            } catch (IOException e) {
+                System.out.println("Erro ao escrever no arquivo de duração!");
             }
-        } catch (IOException e) {
-            System.out.println("Erro ao escrever no arquivo de duração!");
         }
     }
 }
