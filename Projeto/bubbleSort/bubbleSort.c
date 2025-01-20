@@ -19,7 +19,7 @@ void bubbleSort(int arr[], int n) {
 
 int main() {
 
-    int entradas[] = {100, 1000, 10000, 100000, 1000000};
+    int entradas[] = {100, 1000, 10000, 100000};
 
     for (int j = 0; j < 4; j++) {
 
@@ -32,7 +32,7 @@ int main() {
             return 1;
         }
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 4; i++) {
             int n = entradas[i];
             char nome_arquivo[50];
 

@@ -32,7 +32,7 @@ public class bubbleSort {
 
             try (BufferedWriter duracaoWriter = new BufferedWriter(new FileWriter(nomeArquivoDuracao, true))){
                 for (int n : entradas) {
-                    String nomeArquivoEntrada = "Algoritmos/Projeto/bubbleSort/bubbleSortJava/src/" + n + "-entradas.txt";
+                    String nomeArquivoEntrada = "Algoritmos/Projeto/bubbleSort/bubbleSortJava/src/" + n + "-entradas-ivertidas.txt";
 
                     File file = new File(nomeArquivoEntrada);
                     if (!file.exists()) {
