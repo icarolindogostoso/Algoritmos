@@ -37,6 +37,7 @@ void adicionar_final(int valor){
         atual->proximo = novo; // se nao, o proximo do atual é o novo
 
         // antes -> [1] --> agora -> [1,2]
+        // complexidade O(n)
     }
 }
 
