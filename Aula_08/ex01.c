@@ -42,19 +42,23 @@ void adicionar_final(int valor){
 }
 
 void remover_elemento(int valor){
-    struct Node *atual = inicio;
-    struct Node *anterior = NULL;
+    struct Node *atual = inicio; // cria-se um novo Node que recebe o inicio da lista
+    struct Node *anterior = NULL; // cria-se um novo Node que recebe NULL (estou no inicio da lista, entao o anterior é NULL) para nao precisar ficar chegando o proximo do proximo
     while (atual != NULL){
-        if (atual->valor == valor){
-            if (anterior == NULL){
-                remover();
-            } else{
-                anterior->proximo = atual->proximo;
+        if (atual->valor == valor){ // se achar o valor
+            if (anterior == NULL){ // se anterior for igual a NULL significa que estamos no primeiro elemento
+                remover_inicio(); // remover primeiro elemento
+                // complexidade O(1)
+            } else{ // se nao for NULL
+                anterior->proximo = atual->proximo; // o proximo do anterior é o proximo do atual
+                free(atual);
+                // antes -> [4,1,7] (procura o 1) --> agora -> [4,7]
+                // complexidade O(n)
             }
             return;
         }
-        anterior = atual;
-        atual = atual->proximo;
+        anterior = atual; // passa para o proximo elemento
+        atual = atual->proximo; // passa para o proximo elemento
     }
 }
 
@@ -63,13 +67,15 @@ void remover_final(){
     struct Node *anterior = NULL;
     while (atual->proximo != NULL){
         anterior = atual;
-        atual = atual->proximo;
-    } if (anterior == NULL){
-        inicio = NULL;
-    } else {
-        anterior->proximo = NULL;
+        atual = atual->proximo; // vai andando até o final da lista
+    } if (anterior == NULL){ // se o anterior é NULL estamos no inicio da lista
+        inicio = NULL; // inicio é removido
+    } else { // se nao
+        anterior->proximo = NULL; // aponta para o proximo do atual, que é NULL
     }
-    free(atual);
+    free(atual); // remove o atual
+
+    // complexidade O(n)
 }
 
 void remover_inicio(){
