@@ -90,7 +90,7 @@ int busca (int valor){
 
 void imprimir_lista (){
     struct Node* temp = inicio;
-    printf("INICIO --> ")
+    printf("INICIO --> ");
     while (temp != NULL){
         printf("%d --> ", temp->valor);
         temp = temp->proximo;
