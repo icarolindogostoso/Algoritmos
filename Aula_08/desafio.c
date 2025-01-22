@@ -10,6 +10,7 @@ struct Paciente {
 
 struct Medico {
     char nome[50];
+    int atendimentos;
     struct Paciente* pacientes;
     struct Medico* proximo;
 };
@@ -20,8 +21,17 @@ void adicionar_paciente_na_fila(struct Medico* medico, char* nome, int preferenc
     struct Paciente* novo_paciente = malloc(sizeof(struct Paciente));
     strcpy(novo_paciente->nome, nome);
     novo_paciente->preferencial = preferencial;
-    novo_paciente->proximo = medico->pacientes;
-    medico->pacientes = novo_paciente;
+    novo_paciente->proximo = NULL;
+
+    if (medico->pacientes == NULL){
+        medico->pacientes = novo_paciente;
+    } else {
+        struct Paciente* atual = medico->pacientes;
+        while (atual->proximo != NULL){
+            atual = atual->proximo;
+        }
+        atual->proximo = novo_paciente;
+    }
 }
 
 void remover_paciente_na_fila(struct Medico* medico, char* nome){
@@ -85,6 +95,7 @@ void exibir_fila_geral(){
 void adicionar_medico(char* nome){
     struct Medico* novo_medico = malloc(sizeof(struct Medico));
     strcpy(novo_medico->nome, nome);
+    novo_medico->atendimentos = 0;
     novo_medico->pacientes = NULL;
     novo_medico->proximo = lista_medicos;
     lista_medicos = novo_medico;
@@ -119,11 +130,99 @@ void exibir_medicos(){
     }
     int contador = 1;
     while (atual != NULL){
-        printf("%d. %s\n", contador, atual->nome);
+        printf("%d. %s - Atendimentos: %d\n", contador, atual->nome, atual->atendimentos);
         atual = atual->proximo;
         contador++;
     }
     printf("\n");
+}
+
+void atender_paciente(struct Medico* medico){
+    if (medico->atendimentos >= 15){
+        printf("O medico %s ja atendeu 15 pacientes\n", medico->nome);
+        return;
+    }
+
+    if (medico->pacientes == NULL){
+        printf("Nenhum paciente na fila para o medico %s\n", medico->nome);
+        return;
+    }
+
+    struct Paciente* paciente = medico->pacientes;
+    struct Paciente* anterior = NULL;
+
+    if (medico->atendimentos == 0 || medico->atendimentos == 1){
+        while (paciente != NULL && paciente->preferencial != 1){
+            anterior = paciente;
+            paciente = paciente->proximo;
+        }
+
+        if (paciente != NULL){
+            printf("Atendendo paciente preferencial %s\n", paciente->nome);
+            
+            if (anterior == NULL){
+                medico->pacientes = paciente->proximo;
+            } else {
+                anterior->proximo = paciente->proximo;
+            }
+            free(paciente);
+        } else {
+            paciente = medico->pacientes;
+            printf("Atendendo paciente normal: %s\n", paciente->nome);
+            medico->pacientes = paciente->proximo;
+            free(paciente);
+        }
+
+        medico->atendimentos++;
+    } else {
+        if (medico->atendimentos % 2 == 0){
+            while (paciente != NULL && paciente->preferencial != 0){
+                anterior = paciente;
+                paciente = paciente->proximo;
+            }
+
+            if (paciente != NULL){
+                printf("Atendendo paciente normal %s\n", paciente->nome);
+                
+                if (anterior == NULL){
+                    medico->pacientes = paciente->proximo;
+                } else {
+                    anterior->proximo = paciente->proximo;
+                }
+                free(paciente);
+            } else {
+                paciente = medico->pacientes;
+                printf("Atendendo paciente preferencial: %s\n", paciente->nome);
+                medico->pacientes = paciente->proximo;
+                free(paciente);
+            }
+
+            medico->atendimentos++;
+        } else {
+            while (paciente != NULL && paciente->preferencial != 1){
+                anterior = paciente;
+                paciente = paciente->proximo;
+            }
+
+            if (paciente != NULL){
+                printf("Atendendo paciente preferencial %s\n", paciente->nome);
+                
+                if (anterior == NULL){
+                    medico->pacientes = paciente->proximo;
+                } else {
+                    anterior->proximo = paciente->proximo;
+                }
+                free(paciente);
+            } else {
+                paciente = medico->pacientes;
+                printf("Atendendo paciente normal: %s\n", paciente->nome);
+                medico->pacientes = paciente->proximo;
+                free(paciente);
+            }
+
+            medico->atendimentos++;
+        }
+    }
 }
 
 
@@ -241,6 +340,28 @@ void imprimir_fila(){
     exibir_fila_geral();
 }
 
+void atender_paciente_menu(){
+    int opcao;
+    struct Medico* selecionado;
+
+    exibir_medicos();
+
+    printf("Digite o numero do medico: ");
+    scanf("%d", &opcao);
+
+    selecionado = lista_medicos;
+    int contador = 1;
+    while (selecionado != NULL && contador < opcao){
+        selecionado = selecionado->proximo;
+        contador++;
+    }
+
+    if (selecionado != NULL){
+        atender_paciente(selecionado);
+    }
+    printf("\n");
+}
+
 int main(){
     adicionar_medico("Isabella");
     adicionar_medico("Icaro");
@@ -281,7 +402,7 @@ int main(){
             break;
         
         case 8:
-            //atender_paciente_menu();
+            atender_paciente_menu();
             break;
 
         case 9:
