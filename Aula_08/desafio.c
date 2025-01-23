@@ -11,6 +11,7 @@ struct Paciente {
 struct Medico {
     char nome[50];
     int atendimentos;
+    int sequencia;
     struct Paciente* pacientes;
     struct Medico* proximo;
 };
@@ -96,6 +97,7 @@ void adicionar_medico(char* nome){
     struct Medico* novo_medico = malloc(sizeof(struct Medico));
     strcpy(novo_medico->nome, nome);
     novo_medico->atendimentos = 0;
+    novo_medico->sequencia = 0;
     novo_medico->pacientes = NULL;
     novo_medico->proximo = lista_medicos;
     lista_medicos = novo_medico;
@@ -166,16 +168,24 @@ void atender_paciente(struct Medico* medico){
                 anterior->proximo = paciente->proximo;
             }
             free(paciente);
+            medico->sequencia++;
+
+            if (medico->sequencia > 2){
+                medico->sequencia = 0;
+            }
+
         } else {
             paciente = medico->pacientes;
             printf("Atendendo paciente normal: %s\n", paciente->nome);
             medico->pacientes = paciente->proximo;
             free(paciente);
+
+            medico->sequencia = 0;
         }
 
         medico->atendimentos++;
     } else {
-        if (medico->atendimentos % 2 == 0){
+        if (medico->sequencia == 2){
             while (paciente != NULL && paciente->preferencial != 0){
                 anterior = paciente;
                 paciente = paciente->proximo;
@@ -190,11 +200,16 @@ void atender_paciente(struct Medico* medico){
                     anterior->proximo = paciente->proximo;
                 }
                 free(paciente);
+                medico->sequencia = 0;
             } else {
                 paciente = medico->pacientes;
                 printf("Atendendo paciente preferencial: %s\n", paciente->nome);
                 medico->pacientes = paciente->proximo;
                 free(paciente);
+                medico->sequencia++;
+                if(medico->sequencia > 2){
+                    medico->sequencia = 0;
+                }
             }
 
             medico->atendimentos++;
@@ -213,11 +228,16 @@ void atender_paciente(struct Medico* medico){
                     anterior->proximo = paciente->proximo;
                 }
                 free(paciente);
+                medico->sequencia++;
+                if(medico->sequencia > 2){
+                    medico->sequencia = 0;
+                }
             } else {
                 paciente = medico->pacientes;
                 printf("Atendendo paciente normal: %s\n", paciente->nome);
                 medico->pacientes = paciente->proximo;
                 free(paciente);
+                medico->sequencia = 0;
             }
 
             medico->atendimentos++;
