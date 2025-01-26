@@ -61,7 +61,7 @@ void processarDuracaoArquivo(FILE *arquivoDuracao, int *entradas, int numEntrada
     for (int i = 0; i < numEntradas; i++){
         int n = entradas[i];
         char nomeArquivo[50];
-        sprintf(nomeArquivo, "entradas/%d-entradas.txt", n);
+        sprintf(nomeArquivo, "entradas/%d-entradas-ivertidas.txt", n);
 
         int *arr = arquivoEntrada(nomeArquivo, &n);
 
