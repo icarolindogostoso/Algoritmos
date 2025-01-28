@@ -1,49 +1,64 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+import java.util.*;
+import java.io.*;
 
-void bubbleSort(int arr[], int n) {
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (arr[j] > arr[j + 1]) {
-                int temp = arr[j];
-                arr[j] = arr[j + 1];
-                arr[j + 1] = temp;
+public class BubbleSortJava {
+
+    // Função para realizar a ordenação BubbleSort
+    public static void BubbleSort(int[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
             }
         }
     }
-}
-int main() {
-    int entradas[] = {100, 1000, 10000, 100000};
 
-    for (int j = 0; j < 4; j++) {
-        for (int i = 0; i < 4; i++) {
-            int n = entradas[i];
-            char nome_arquivo[50];
-            sprintf(nome_arquivo, "%d-entradas.txt", n);
-            FILE *file = fopen(nome_arquivo, "r");
-          
-            if (file == NULL) {
-                printf("erro ao abrir o arquivo\n", nome_arquivo);
-                return 1;
+    public static void main(String[] args) {
+        // Tamanhos de entradas para os testes
+        int[] entradas = {100, 1000, 10000, 100000};
+
+        // O loop externo deve repetir os testes 4 vezes, como no código C
+        for (int j = 0; j < 4; j++) {
+            // O loop interno percorre os diferentes tamanhos de array
+            for (int i = 0; i < entradas.length; i++) {
+                int n = entradas[i];  // Tamanho do array atual
+                String nomeArquivo = n + "-entradas.txt";  // Nome do arquivo correspondente ao tamanho
+
+                File file = new File(nomeArquivo);  // Cria um objeto File para o arquivo de entrada
+                if (!file.exists()) {
+                    System.out.println("Erro ao abrir o arquivo: " + nomeArquivo);
+                    return;  // Encerra o programa se o arquivo não for encontrado
+                }
+
+                List<Integer> numeros = new ArrayList<>();
+                // Lê os números do arquivo
+                try (Scanner scanner = new Scanner(file)) {
+                    while (scanner.hasNextInt()) {
+                        numeros.add(scanner.nextInt());
+                    }
+                } catch (FileNotFoundException e) {
+                    System.out.println("Erro ao ler o arquivo: " + nomeArquivo);
+                    return;
+                }
+
+                // Converte a lista de Integers para um array de inteiros
+                int[] arr = numeros.stream().mapToInt(i -> i).toArray();
+
+                // Mede o tempo de execução do BubbleSort
+                long start = System.nanoTime();
+                BubbleSort(arr);
+                long end = System.nanoTime();
+
+                // Calcula o tempo de execução em segundos
+                double tempo = (end - start) / 1e9;
+
+                // Exibe o tempo de execução no console
+                System.out.printf("Tempo de execucao para %d entradas: %.6f segundos\n", n, tempo);
             }
-          
-            int *arr = (int*)malloc(n * sizeof(int));
-            int k = 0;
-            while (fscanf(file, "%d", &arr[k]) != EOF) {
-                k++;
-            }
-            fclose(file);
-
-            clock_t start, end;
-            start = clock();
-            bubbleSort(arr, n);
-            end = clock();
-
-            double tempo = (double)(end - start) / CLOCKS_PER_SEC;
-            free(arr);
-            printf("Tempo de execucao para %d entradas: %.6f segundos\n", n, tempo);
         }
     }
-    return 0;
 }
